@@ -40,8 +40,8 @@ var traces = [
   'hexacopter-hil-fifo-ls-sporadic.kev.csv',
   // 'hexacopter-hil-full-while.kev.csv',
   // 'hexacopter-hil-half-while.kev.csv',
-  // 'hexacopter-hil-fifo-ls-02.kev.csv'
-  'hexacopter-hil-clean-10.kev.csv'
+  'hexacopter-hil-fifo-ls-02.kev.csv'
+  // 'hexacopter-hil-clean-10.kev.csv'
 ];
 
 var trainingSet = {};
@@ -65,22 +65,6 @@ traces.forEach(function (trace) {
     if (err) throw err;
 
     var stats = {};
-    var targetEvs = ["BUFFER", "TIME", "PROCCREATE_NAME",
-                     "THCREATE", "THREADY", "THRECEIVE", "THSIGWAITINFO", "PROCTHREAD_NAME",
-                     "THNANOSLEEP", "THREPLY", "THRUNNING", "THCONDVAR", "THJOIN", "TRACE_EVENT/01", "MSG_SENDV/11",
-                      "SND_MESSAGE", "REC_MESSAGE", "MSG_RECEIVEV/14",
-                      "MSG_REPLYV/15","REPLY_MESSAGE","REC_PULSE", "SND_PULSE_EXE","EVENT-2",
-                      "EVENT-0","CONNECT_CLIENT_INFO/42",
-                      "SYNC_CONDVAR_SIGNAL/83","SYNC_CONDVAR_SIG/83","SYNC_CONDVAR_WAIT/82",
-                      "MSG_READV/16","THWAITPAGE",
-                      "MSG_WRITEV/17","TIMER_TIMEOUT/75","SIGNAL_WAITINFO/32",
-                      "EVENT-1","MSG_INFO/19",
-                      "MSG_CURRENT/10","EVENT-3",
-                      "MSG_DELIVER_EVENT/21","MSG_SENDVNC/12","THSEND",
-                      "MSG_ERROR/13","MSG_ERROR","CONNECT_ATTACH/39",
-                      "PATHMGR_OPEN","CONNECT_DETACH/40","CONNECT_FLAGS/43",
-                      "SYNC_MUTEX_LOCK/80","THMUTEX","SYNC_MUTEX_UNLOCK/81"];
-
 
     var lines = data.split('\n');
     lines.splice(0, 1);
