@@ -5,7 +5,8 @@
   "main": "anomalyDetector.js",
   "dependencies": {
     "brain": "~0.6.3",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "som": "~0.1.0"
   },
   "devDependencies": {},
   "scripts": {
