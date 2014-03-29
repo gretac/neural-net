@@ -36,8 +36,8 @@ var runNet = function () {
   var som = require('som').create({
     features: uniq_pairs,
     iterationCount: _.size(traces),
-    width: 1,
-    height: 2
+    width: 20,
+    height: 20
   });
 
   //initialize SOM with default distance function (euclidean)
@@ -50,7 +50,8 @@ var runNet = function () {
     som.train(key, val);
   });
 
-  console.log('SOM', util.inspect(som, false, 8));
+  //console.log('SOM', util.inspect(som, false, 8));
+  console.log('SOM', util.inspect(som.traineeIndex, false, 8));
 
   console.log('best matching unit for', targetTrace);
   var result = som.bestMatchingUnit(netInput);
@@ -58,7 +59,7 @@ var runNet = function () {
 };
 
 (function () {
-  var readFromDisk = false;
+  var readFromDisk = true;
   if (readFromDisk) {
     var cb = _.after(_.size(traces), function () {
       runNet();
@@ -94,7 +95,7 @@ var runNet = function () {
             return ev === targetEv;
           });
           // console.log(foundTargets.length);
-          stats[targetEv] = foundTargets.length;
+          stats[targetEv] = foundTargets.length / eventCount;
         });
 
         trainingSet[trace] = stats; // the inputs are relative event counts
