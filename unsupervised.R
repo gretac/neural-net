@@ -19,13 +19,14 @@ evs <- c("BUFFER","TIME","PROCCREATE_NAME", "THCREATE","THREADY",
          "PATHMGR_OPEN","CONNECT_DETACH/40","CONNECT_FLAGS/43",
          "SYNC_MUTEX_LOCK/80","THMUTEX","SYNC_MUTEX_UNLOCK/81")
 
-GetEventTotals <- function (trace) {
+GetEventTotals <- memoize('GetEventTotals', function (traceName) {
+  trace <- LoadTrace(traceName)
   ret <- sapply(evs, function (ev) {
     targets <- trace[trace$event == ev, ]
-    nrow(targets)
+    as.integer(nrow(targets))
   })
   return (ret)
-}
+})
 
 traces <- c('hexacopter-hil-clean-01.trace',
            'hexacopter-hil-clean-02.trace',
@@ -33,31 +34,44 @@ traces <- c('hexacopter-hil-clean-01.trace',
            'hexacopter-hil-clean-04.trace',
            'hexacopter-hil-clean-05.trace',
            'hexacopter-hil-clean-06.trace',
-           'hexacopter-hil-fifo-ls-01.trace',
-           'hexacopter-hil-fifo-ls-02.trace',
-           'hexacopter-hil-half-while.trace',
-           'hexacopter-hil-full-while.trace')
+           #'hexacopter-hil-fifo-ls-01.trace',
+           #'hexacopter-hil-fifo-ls-02.trace',
+           'hexacopter-hil-half-while.trace')
+           #'hexacopter-hil-full-while.trace')
 
 testTraces <- c('hexacopter-hil-clean-07.trace',
+                'hexacopter-hil-clean-08.trace',
+                'hexacopter-hil-clean-09.trace',
+                 'hexacopter-hil-fifo-ls-02.trace',
                 'hexacopter-hil-fifo-ls-sporadic.trace')
 
 GetTraceEvents <- memoize("GetTraceEvents", function (traceNames) {
   trainingData <- matrix(data=0, nrow=length(traceNames), ncol=length(evs))
   colnames(trainingData) <- evs
   for (i in 1:length(traceNames)) {
-    trainingData[i, ] <- GetEventTotals(LoadTrace(traceNames[[i]]))
+    trainingData[i, ] <- GetEventTotals(traceNames[[i]])
   }
   return (trainingData)
 })
 
-GetTestTraceEvents <- memoize("GetTestTraceEvents", function () {
-  return (GetTraceEvents(testTraces))
-})
-
 
 RunNet <- function () {
-  trainingSet <- GetTrace(traces)
+  Xtraining <- GetTraceEvents(traces)
+  Xtest <- GetTraceEvents(testTraces)
+  som.traces <- som(Xtraining, grid=somgrid(2, 3, "hexagonal"))
+  som.prediction <- predict(som.traces, newdata=Xtest, trainX=Xtraining,
+                            trainY=c(1,1,1,1,1,1, 2))
+  return (som.prediction)
 
 }
 
 
+RunNetClean <- function () {
+  Xtraining <- GetTraceEvents(traces)
+  Xtest <- GetTestTraceEventsClean()
+  som.traces <- som(Xtraining, grid=somgrid(3, 3, "hexagonal"))
+  som.prediction <- predict(som.traces, newdata=Xtest, trainX=Xtraining,
+                            trainY=c(1,1,1,1,1,1,2,2,3,3))
+  return (som.prediction)
+
+}
