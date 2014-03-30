@@ -1,6 +1,6 @@
 
+source('memoize.R')
 traceDir <- '.'
-memoize <- function (str, fn) return (fn)
 
 FullTracePath <- function (traceName) {
   return (paste(traceDir, traceName, sep="/"))

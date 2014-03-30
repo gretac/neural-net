@@ -2,3 +2,4 @@ node_modules
 *.csv
 *.trace
 *.kev
+memoize/func-*
